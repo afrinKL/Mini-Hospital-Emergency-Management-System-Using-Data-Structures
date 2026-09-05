@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class Main {
     static PatientBST records = new PatientBST();
+    static EmergencyQueue waitingLine = new EmergencyQueue();
     static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -9,7 +10,8 @@ public class Main {
         while (running) {
             System.out.println("\n** Mini Hospital Emergency Management System **");
             System.out.println("1. Patient Records");
-            System.out.println("2. Exit");
+            System.out.println("2. Emergency Queue");
+            System.out.println("3. Exit");
             System.out.print("Your choice: ");
             int pick = scan.nextInt();
             scan.nextLine();
@@ -17,6 +19,8 @@ public class Main {
             if (pick == 1) {
                 patientMenu();
             } else if (pick == 2) {
+                queueMenu();
+            } else if (pick == 3) {
                 System.out.println("Thank you for using the system.");
                 running = false;
             } else {
@@ -100,5 +104,49 @@ public class Main {
         } else {
             System.out.println("Patient not found.");
         }
+    }
+
+    static void queueMenu() {
+        boolean stay = true;
+        while (stay) {
+            System.out.println("\n--- Emergency Queue ---");
+            System.out.println("1. Add Patient to Queue");
+            System.out.println("2. Serve Next Patient");
+            System.out.println("3. Show Waiting Patients");
+            System.out.println("4. Back to Main Menu");
+            System.out.print("Your choice: ");
+            int pick = scan.nextInt();
+            scan.nextLine();
+
+            if (pick == 1) {
+                addToQueue();
+            } else if (pick == 2) {
+                Patient served = waitingLine.serveNext();
+                if (served != null) {
+                    System.out.println("Patient " + served.pName + " removed for treatment.");
+                }
+            } else if (pick == 3) {
+                waitingLine.showQueue();
+            } else if (pick == 4) {
+                stay = false;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    static void addToQueue() {
+        System.out.print("Enter Patient ID: ");
+        int pID = scan.nextInt();
+        scan.nextLine();
+
+        Patient one = records.lookFor(pID);
+        if (one == null) {
+            System.out.println("Patient not found. Please register the patient first.");
+            return;
+        }
+
+        waitingLine.joinLine(one);
+        System.out.println("Patient " + one.pName + " added to emergency queue.");
     }
 }
