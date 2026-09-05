@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Main {
     static PatientBST records = new PatientBST();
     static EmergencyQueue waitingLine = new EmergencyQueue();
+    static TreatmentStack history = new TreatmentStack();
     static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -11,7 +12,8 @@ public class Main {
             System.out.println("\n** Mini Hospital Emergency Management System **");
             System.out.println("1. Patient Records");
             System.out.println("2. Emergency Queue");
-            System.out.println("3. Exit");
+            System.out.println("3. Treatment History");
+            System.out.println("4. Exit");
             System.out.print("Your choice: ");
             int pick = scan.nextInt();
             scan.nextLine();
@@ -21,6 +23,8 @@ public class Main {
             } else if (pick == 2) {
                 queueMenu();
             } else if (pick == 3) {
+                treatmentMenu();
+            } else if (pick == 4) {
                 System.out.println("Thank you for using the system.");
                 running = false;
             } else {
@@ -148,5 +152,51 @@ public class Main {
 
         waitingLine.joinLine(one);
         System.out.println("Patient " + one.pName + " added to emergency queue.");
+    }
+
+    static void treatmentMenu() {
+        boolean stay = true;
+        while (stay) {
+            System.out.println("\n--- Treatment History ---");
+            System.out.println("1. Complete a Treatment");
+            System.out.println("2. Remove Latest Treatment");
+            System.out.println("3. Show Treatment History");
+            System.out.println("4. Back to Main Menu");
+            System.out.print("Your choice: ");
+            int pick = scan.nextInt();
+            scan.nextLine();
+
+            if (pick == 1) {
+                completeTreatment();
+            } else if (pick == 2) {
+                history.takeFromTop();
+            } else if (pick == 3) {
+                history.showStack();
+            } else if (pick == 4) {
+                stay = false;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    static void completeTreatment() {
+        System.out.print("Enter Patient ID: ");
+        int pID = scan.nextInt();
+        scan.nextLine();
+
+        Patient one = records.lookFor(pID);
+        if (one == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
+
+        System.out.print("Enter Treatment Details: ");
+        String detail = scan.nextLine();
+        System.out.print("Enter Date (DD/MM/YYYY): ");
+        String when = scan.nextLine();
+
+        TreatmentRecord record = new TreatmentRecord(pID, one.pName, detail, when);
+        history.placeOnTop(record);
     }
 }
