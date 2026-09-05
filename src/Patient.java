@@ -4,6 +4,7 @@ public class Patient {
     int pAge;
     String pPhone;
     String pSickness;
+    VisitList visits;
 
     public Patient(int pID, String pName, int pAge, String pPhone, String pSickness) {
         this.pID = pID;
@@ -11,6 +12,7 @@ public class Patient {
         this.pAge = pAge;
         this.pPhone = pPhone;
         this.pSickness = pSickness;
+        this.visits = new VisitList();
     }
 
     public void showInfo() {

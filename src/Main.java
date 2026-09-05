@@ -37,12 +37,16 @@ public class Main {
     static void patientMenu() {
         boolean stay = true;
         while (stay) {
-            System.out.println("\n--- Patient Records (BST) ---");
+            System.out.println("\n--- Patient Records ---");
             System.out.println("1. Insert New Patient");
             System.out.println("2. Search Patient");
             System.out.println("3. Delete Patient");
             System.out.println("4. Display All Patients (In order)");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("5. Add Visit to Patient");
+            System.out.println("6. Remove Visit from Patient");
+            System.out.println("7. Find a Visit");
+            System.out.println("8. Show Patient Visit History");
+            System.out.println("9. Back to Main Menu");
             System.out.print("Your choice: ");
             int pick = scan.nextInt();
             scan.nextLine();
@@ -56,6 +60,14 @@ public class Main {
             } else if (pick == 4) {
                 records.printInOrder();
             } else if (pick == 5) {
+                addVisit();
+            } else if (pick == 6) {
+                removeVisit();
+            } else if (pick == 7) {
+                findVisit();
+            } else if (pick == 8) {
+                showVisitHistory();
+            } else if (pick == 9) {
                 stay = false;
             } else {
                 System.out.println("Invalid choice. Please try again.");
@@ -108,6 +120,90 @@ public class Main {
         } else {
             System.out.println("Patient not found.");
         }
+    }
+
+    static void addVisit() {
+        System.out.print("Enter Patient ID: ");
+        int pID = scan.nextInt();
+        scan.nextLine();
+
+        Patient one = records.lookFor(pID);
+        if (one == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
+
+        System.out.print("Enter Visit No: ");
+        int visitNo = scan.nextInt();
+        scan.nextLine();
+        System.out.print("Enter Visit Date (DD/MM/YYYY): ");
+        String visitDay = scan.nextLine();
+        System.out.print("Enter Doctor Name: ");
+        String docName = scan.nextLine();
+        System.out.print("Enter Diagnosis: ");
+        String finding = scan.nextLine();
+        System.out.print("Enter Treatment: ");
+        String care = scan.nextLine();
+
+        Visit newVisit = new Visit(visitNo, visitDay, docName, finding, care);
+        one.visits.addVisit(newVisit);
+    }
+
+    static void removeVisit() {
+        System.out.print("Enter Patient ID: ");
+        int pID = scan.nextInt();
+        scan.nextLine();
+
+        Patient one = records.lookFor(pID);
+        if (one == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
+
+        System.out.print("Enter Visit No to remove: ");
+        int visitNo = scan.nextInt();
+        scan.nextLine();
+
+        one.visits.removeVisit(visitNo);
+    }
+
+    static void findVisit() {
+        System.out.print("Enter Patient ID: ");
+        int pID = scan.nextInt();
+        scan.nextLine();
+
+        Patient one = records.lookFor(pID);
+        if (one == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
+
+        System.out.print("Enter Visit No to find: ");
+        int visitNo = scan.nextInt();
+        scan.nextLine();
+
+        Visit got = one.visits.findVisit(visitNo);
+        if (got != null) {
+            System.out.println("Visit found:");
+            got.showVisit();
+        } else {
+            System.out.println("Visit not found.");
+        }
+    }
+
+    static void showVisitHistory() {
+        System.out.print("Enter Patient ID: ");
+        int pID = scan.nextInt();
+        scan.nextLine();
+
+        Patient one = records.lookFor(pID);
+        if (one == null) {
+            System.out.println("Patient not found.");
+            return;
+        }
+
+        System.out.println("Visit history for " + one.pName + ":");
+        one.visits.showVisits();
     }
 
     static void queueMenu() {
